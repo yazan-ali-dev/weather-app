@@ -1,0 +1,41 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* تأثير المرور بالماوس على عناصر القائمة الجانبية */
+.hover-effect:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  transition: background-color 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.bi-trash {
+  transition: all 0.3s;
+}
+
+.bi-trash:hover {
+  color: #dc3545 !important;
+}
