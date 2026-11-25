@@ -8,16 +8,18 @@ function formatCityName(city) {
   return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
 }
 
-export async function fetchWeatherData(cityName) {
+export async function fetchWeatherData(cityName, signal) {
   const formattedCity = formatCityName(cityName);
 
   try {
     const [currentResponse, forecastResponse] = await Promise.all([
       axios.get(`https://api.openweathermap.org/data/2.5/weather`, {
         params: { q: formattedCity, units: "metric", appid: API_KEY },
+        signal,
       }),
       axios.get(`https://api.openweathermap.org/data/2.5/forecast`, {
         params: { q: formattedCity, units: "metric", appid: API_KEY },
+        signal,
       }),
     ]);
 
@@ -27,6 +29,7 @@ export async function fetchWeatherData(cityName) {
       `https://api.openweathermap.org/data/2.5/air_pollution`,
       {
         params: { lat, lon, appid: API_KEY },
+        signal,
       },
     );
 
@@ -53,6 +56,13 @@ export async function fetchWeatherData(cityName) {
       daily: forecastResponse.data.list.filter((_, index) => index % 8 === 0),
     };
   } catch (error) {
+    if (
+      axios.isCancel(error) ||
+      error.name === "CanceledError" ||
+      error.name === "AbortError"
+    ) {
+      throw error;
+    }
     if (error.code === "ECONNABORTED") {
       throw new Error(
         "Network timeout: Connection took too long. Please check your network.",

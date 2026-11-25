@@ -11,17 +11,26 @@ export default function WeatherProvider({ children }) {
   const [state, dispatch] = useReducer(weatherReducer, initialWeatherState);
 
   useEffect(() => {
+    const controller = new AbortController();
     async function loadWeather() {
       dispatch({ type: "FETCH_WEATHER_START" });
       try {
-        const data = await fetchWeatherData(state.currentCity);
+        const data = await fetchWeatherData(
+          state.currentCity,
+          controller.signal,
+        );
         dispatch({ type: "FETCH_WEATHER_SUCCESS", payload: data });
       } catch (err) {
+        if (err.name === "AbortError") return;
         dispatch({ type: "FETCH_WEATHER_FAILURE", payload: err.message });
       }
     }
 
     loadWeather();
+
+    return () => {
+      controller.abort();
+    };
   }, [state.currentCity]);
 
   return (
