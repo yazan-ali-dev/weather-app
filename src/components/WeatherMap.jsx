@@ -1,6 +1,6 @@
 import React from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import { useWeather } from "../contexts/WeatherContext";
+import { useSelector } from "react-redux";
 import "leaflet/dist/leaflet.css";
 
 // مكون مساعدة داخلي لتحديث مركز الخريطة برمجياً كلما تغيرت الإحداثيات
@@ -15,8 +15,7 @@ function MapUpdater({ center }) {
 }
 
 export default function WeatherMap() {
-  const { state } = useWeather();
-  const { weatherData } = state;
+  const weatherData = useSelector((state) => state.weather.weatherData);
 
   // إحداثيات افتراضية (بانياس) في حال لم تكن البيانات قد وصلت بعد
   const defaultPosition = [35.1833, 35.95];

@@ -1,14 +1,15 @@
 import { Form, InputGroup } from "react-bootstrap";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { useSidebar } from "../contexts/SideBarContext";
 import { useState, useEffect } from "react";
-import { useWeather } from "../contexts/WeatherContext";
+import { toggleSidebar } from "../features/sidebar/sidebarSlice";
+import { useDispatch } from "react-redux";
+
+import { setCurrentCity } from "../features/weather/weatherSlice";
 
 function TopBar() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [searchTerm, setSearchTerm] = useState("");
-  const { toggleSidebar } = useSidebar();
-  const { dispatch } = useWeather();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -37,7 +38,7 @@ function TopBar() {
     const res = searchTerm.trim();
     if (!res) return;
 
-    dispatch({ type: "SET_CURRENT_CITY", payload: res });
+    dispatch(setCurrentCity(res));
     setSearchTerm("");
   }
 
@@ -56,7 +57,7 @@ function TopBar() {
           className="bi bi-list fs-3 text-white"
           style={{ cursor: "pointer" }}
           onClick={() => {
-            toggleSidebar();
+            dispatch(toggleSidebar());
           }}
         ></i>
       </div>

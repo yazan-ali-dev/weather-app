@@ -1,16 +1,24 @@
 import "./App.css";
 import WeatherDashboard from "./components/WeatherDashboard";
-import SidebarProvider from "./contexts/SideBarContext";
-import WeatherProvider from "./contexts/WeatherContext";
+import { useEffect } from "react";
+import { getWeatherByCity } from "./features/weather/weatherSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 function App() {
-  return (
-    <SidebarProvider>
-      <WeatherProvider>
-        <WeatherDashboard />
-      </WeatherProvider>
-    </SidebarProvider>
-  );
+  const cityName = useSelector((state) => state.weather.currentCity);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!cityName) return;
+
+    const promis = dispatch(getWeatherByCity(cityName));
+
+    return () => {
+      promis.abort();
+    };
+  }, [dispatch, cityName]);
+
+  return <WeatherDashboard />;
 }
 
 export default App;

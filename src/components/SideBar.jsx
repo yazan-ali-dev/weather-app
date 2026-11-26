@@ -1,8 +1,15 @@
-import { useWeather } from "../contexts/WeatherContext";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import {
+  setCurrentCity,
+  removeFromFavorite,
+  removeFromRecent,
+} from "../features/weather/weatherSlice";
 
 export default function SideBar() {
-  const { state, dispatch } = useWeather();
-  const { favorites, recentSearches } = state;
+  const dispatch = useDispatch();
+  const favorites = useSelector((state) => state.weather.favorites);
+  const recentSearches = useSelector((state) => state.weather.recentSearches);
 
   return (
     <div
@@ -29,7 +36,7 @@ export default function SideBar() {
                   className="d-flex align-items-center py-2 px-2 gap-2 rounded hover-effect justify-content-between"
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    dispatch({ type: "SET_CURRENT_CITY", payload: city });
+                    dispatch(setCurrentCity(city));
                   }}
                 >
                   <div>
@@ -41,10 +48,7 @@ export default function SideBar() {
                     className="bi bi-trash fs-6 text-white-50 hover-danger"
                     onClick={(e) => {
                       e.stopPropagation();
-                      dispatch({
-                        type: "REMOVE_FROM_FAVORITE",
-                        payload: city,
-                      });
+                      dispatch(removeFromFavorite(city));
                     }}
                   ></i>
                 </li>
@@ -77,7 +81,7 @@ export default function SideBar() {
                   className="d-flex align-items-center py-2 px-2 rounded hover-effect gap-2 justify-content-between"
                   style={{ cursor: "pointer" }}
                   onClick={() => {
-                    dispatch({ type: "SET_CURRENT_CITY", payload: city });
+                    dispatch(setCurrentCity(city));
                   }}
                 >
                   <div>
@@ -89,10 +93,7 @@ export default function SideBar() {
                     className="bi bi-trash fs-6 text-white-50 hover-danger"
                     onClick={(e) => {
                       e.stopPropagation();
-                      dispatch({
-                        type: "REMOVE_FROM_RECENT",
-                        payload: city,
-                      });
+                      dispatch(removeFromRecent(city));
                     }}
                   ></i>
                 </li>

@@ -1,40 +1,52 @@
-import { useWeather } from "../contexts/WeatherContext";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToFavorite,
+  removeFromFavorite,
+} from "../features/weather/weatherSlice";
 
 export default function CurrentWeather() {
-  const { state, dispatch } = useWeather();
-  const { weatherData } = state;
+  const weatherData = useSelector((state) => state.weather.weatherData);
+  const favorites = useSelector((state) => state.weather.favorites);
+  const dispatch = useDispatch();
 
-  if (!weatherData) return null;
+  const cityName = weatherData?.cityName;
 
-  const { current, daily, cityName, country } = weatherData;
+  const isAlreadyFavorite = useMemo(() => {
+    if (!cityName) return false;
+    return favorites.some(
+      (fav) => fav.toLowerCase() === cityName.toLowerCase(),
+    );
+  }, [favorites, cityName]);
+
+  if (!weatherData)
+    return (
+      <div
+        className="p-4 text-white h-100 d-flex flex-column justify-content-center align-items-center"
+        style={{
+          backgroundColor: "rgba(255, 255, 255, 0.05)",
+          backdropFilter: "blur(10px)",
+          borderRadius: "16px",
+          border: "2px solid rgba(255, 255, 255, 0.1)",
+          minHeight: "340px",
+        }}
+      >
+        <span className="text-white-50">Loading Weathe Data...</span>
+      </div>
+    );
+
+  const { current, daily, country } = weatherData;
 
   const currentTemp = Math.round(current.temp);
   const feelsLike = Math.round(current.feels_like);
   const weatherDescription = current.weather[0].description;
   const iconCode = current.weather[0].icon;
 
-  const isAlreadyFavorite = useMemo(() => {
-    return state.favorites?.some((fav) => fav === weatherData.cityName);
-  });
-
   const handleToggleFavorite = () => {
-    const isAlreadyFavorite = state.favorites?.some(
-      (fav) => fav === weatherData.cityName,
-    );
-
     if (isAlreadyFavorite) {
-      // إزالة من المفضلة
-      dispatch({
-        type: "REMOVE_FROM_FAVORITE",
-        payload: cityName,
-      });
+      dispatch(removeFromFavorite(cityName));
     } else {
-      // إضافة إلى المفضلة
-      dispatch({
-        type: "ADD_TO_FAVORITE",
-        payload: cityName,
-      });
+      dispatch(addToFavorite(cityName));
     }
   };
 

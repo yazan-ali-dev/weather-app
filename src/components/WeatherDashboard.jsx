@@ -7,15 +7,15 @@ import AirQuality from "./AirQuality";
 import WindPressure from "./WindPressure";
 import HumidityUV from "./HumidityUV";
 import WeatherMap from "./WeatherMap";
-import { useSidebar } from "../contexts/SideBarContext";
-import { useWeather } from "../contexts/WeatherContext";
 import LoadingSpinner from "./LoadingSpinner";
 import ErrorCard from "./ErrorCard";
+import { useSelector } from "react-redux";
 
 export default function WeatherDashboard() {
-  const { state } = useWeather();
-  const { loading, error, weatherData } = state;
-  const { isOpen } = useSidebar();
+  const loading = useSelector((state) => state.weather.loading);
+  const error = useSelector((state) => state.weather.error);
+  const isOpen = useSelector((state) => state.sidebar.isOpen);
+
   return (
     <Container fluid className="py-4">
       <TopBar />

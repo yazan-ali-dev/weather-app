@@ -1,10 +1,23 @@
-import { useWeather } from "../contexts/WeatherContext";
+import { useSelector } from "react-redux";
 
 export default function HourlyForecast() {
-  const { state } = useWeather();
-  const { weatherData } = state;
+  const weatherData = useSelector((state) => state.weather.weatherData);
 
-  if (!weatherData || !weatherData.hourly) return null;
+  if (!weatherData || !weatherData.hourly)
+    return (
+      <div
+        className="p-4 text-white h-100 d-flex flex-column justify-content-center align-items-center"
+        style={{
+          backgroundColor: "rgba(255, 255, 255, 0.05)",
+          backdropFilter: "blur(10px)",
+          borderRadius: "16px",
+          border: "2px solid rgba(255, 255, 255, 0.1)",
+          minHeight: "340px",
+        }}
+      >
+        <span className="text-white-50">Loading HourlyForeccast...</span>
+      </div>
+    );
 
   return (
     <div

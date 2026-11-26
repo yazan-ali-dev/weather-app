@@ -1,10 +1,8 @@
-import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-import { useWeather } from "../contexts/WeatherContext";
+import { useSelector } from "react-redux";
 
 export default function AirQuality() {
-  const { state } = useWeather();
-  const { weatherData } = state;
+  const weatherData = useSelector((state) => state.weather.weatherData);
 
   if (!weatherData || !weatherData.airQuality) {
     return (
@@ -28,15 +26,15 @@ export default function AirQuality() {
   const getAqiConfig = (level) => {
     switch (level) {
       case 1:
-        return { text: "Good", color: "#28a745", value: 30 }; 
+        return { text: "Good", color: "#28a745", value: 30 };
       case 2:
-        return { text: "Fair", color: "#17a2b8", value: 45 }; 
+        return { text: "Fair", color: "#17a2b8", value: 45 };
       case 3:
         return { text: "Moderate", color: "#ffc107", value: 65 };
       case 4:
-        return { text: "Poor", color: "#fd7e14", value: 85 }; 
+        return { text: "Poor", color: "#fd7e14", value: 85 };
       case 5:
-        return { text: "Very Poor", color: "#dc3545", value: 100 }; 
+        return { text: "Very Poor", color: "#dc3545", value: 100 };
       default:
         return { text: "Good", color: "#28a745", value: 30 };
     }

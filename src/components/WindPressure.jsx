@@ -1,9 +1,7 @@
-import React from "react";
-import { useWeather } from "../contexts/WeatherContext";
+import { useSelector } from "react-redux";
 
 export default function WindPressure() {
-  const { state } = useWeather();
-  const { weatherData } = state;
+  const weatherData = useSelector((state) => state.weather.weatherData);
 
   if (!weatherData || !weatherData.current) {
     return (
